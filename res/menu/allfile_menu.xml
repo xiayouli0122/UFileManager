@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+     xmlns:zhaoyan="http://schemas.android.com/apk/res-auto" 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item 
+        android:title=""
+        zhaoyan:id="@+id/menu_copy"
+        zhaoyan:title="@string/copy"
+        zhaoyan:iconEnable="@drawable/ic_action_copy_enable"
+        zhaoyan:iconDisable="@drawable/ic_action_copy_disable"
+        zhaoyan:enable="true"
+        />
+     
+      <item 
+          android:title=""
+        zhaoyan:id="@+id/menu_cut"
+        zhaoyan:title="@string/cut"
+        zhaoyan:iconEnable="@drawable/ic_action_cut_enable"
+        zhaoyan:iconDisable="@drawable/ic_action_cut_disable"
+        zhaoyan:enable="true"
+        />
+    
+    <item 
+         android:title=""
+        zhaoyan:id="@+id/menu_delete"
+        zhaoyan:title="@string/menu_delete"
+        zhaoyan:iconEnable="@drawable/ic_action_delete_enable"
+        zhaoyan:iconDisable="@drawable/ic_action_delete_disable"
+        zhaoyan:enable="true"
+        />
+    
+    <item 
+         android:title=""
+        zhaoyan:id="@+id/menu_select"
+        zhaoyan:title="@string/select_all"
+        zhaoyan:iconEnable="@drawable/ic_aciton_select"
+        zhaoyan:iconDisable="@drawable/ic_aciton_select"
+        zhaoyan:enable="true"
+        />
+    
+    <item 
+        android:title=""
+        zhaoyan:id="@+id/menu_more"
+        zhaoyan:title="@string/menu_more"
+        zhaoyan:iconEnable="@drawable/ic_action_overflow_enable"
+        zhaoyan:iconDisable="@drawable/ic_action_overflow_disable"
+        zhaoyan:enable="true"
+        />
+</menu>

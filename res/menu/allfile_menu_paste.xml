@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:zhaoyan="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        zhaoyan:id="@+id/menu_create_folder"
+        android:title=""
+        zhaoyan:enable="true"
+        zhaoyan:iconEnable="@drawable/ic_action_createfolder_enable"
+        zhaoyan:title="@string/create_folder"/>
+    <item
+        zhaoyan:id="@+id/menu_paste"
+        android:title=""
+        zhaoyan:enable="true"
+        zhaoyan:iconEnable="@drawable/ic_action_paste_enable"
+        zhaoyan:title="@string/paste"/>
+    <item
+        zhaoyan:id="@+id/menu_cancel"
+        android:title=""
+        zhaoyan:enable="true"
+        zhaoyan:iconEnable="@drawable/ic_action_cancel_enable"
+        zhaoyan:title="@string/cancel"/>
+
+</menu>
