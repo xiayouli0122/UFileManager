@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-public class ZYConstant {
+public class Constants {
 	public static final int REQUEST_FOR_MODIFY_NAME = 0x12;
 	
 	public static final String[] ERROR_NAME_STRS = {":","<",">","\\","|","?","/"};
@@ -119,28 +119,9 @@ public class ZYConstant {
 
 	public static final String DEFAULT_SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
 	/** the default folder that save the receive files */
-	public static final String JUYOU_FOLDER = DEFAULT_SDCARD + File.separator + "JuYou";
-	public static final String JUYOU_BACKUP_FOLDER = JUYOU_FOLDER + File.separator + "应用备份";
-	public static final String JUYOU_IMAGE_FOLDER = JUYOU_FOLDER + File.separator + "图片";
-	public static final String JUYOU_APP_FOLDER = JUYOU_FOLDER + File.separator + "应用";
-	public static final String JUYOU_MUSIC_FOLDER = JUYOU_FOLDER + File.separator + "音乐";
-	public static final String JUYOU_VIDEO_FOLDER = JUYOU_FOLDER + File.separator + "视频";
-	public static final String JUYOU_OTHER_FOLDER = JUYOU_FOLDER + File.separator + "其他";
 	
-	public static void initJuyouFolder(){
-		mkdirs(JUYOU_FOLDER);
-		mkdirs(JUYOU_APP_FOLDER);
-		mkdirs(JUYOU_IMAGE_FOLDER);
-		mkdirs(JUYOU_MUSIC_FOLDER);
-		mkdirs(JUYOU_VIDEO_FOLDER);
-		mkdirs(JUYOU_OTHER_FOLDER);
-		mkdirs(JUYOU_BACKUP_FOLDER);
-	}
 	
-	private static void mkdirs(String path) {
-		File file = new File(path);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
+	public static final class Extras{
+	    public static final String KEY_DEFAULT_ROOT_PATH = "key_default_root_path";
 	}
 }

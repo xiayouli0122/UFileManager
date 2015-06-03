@@ -83,7 +83,7 @@ public class BaseFragment extends LibBaseFragment{
 	 * when user pressed back key
 	 */
 	public boolean onBackPressed(){
-		return true;
+		return false;
 	}
 	
 	public void onDestroy() {

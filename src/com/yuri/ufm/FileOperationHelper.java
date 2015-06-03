@@ -6,10 +6,11 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zhaoyan.common.utils.Log;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class FileOperationHelper {
 	private static final String TAG = "FileOperationHelper";
@@ -71,6 +72,7 @@ public class FileOperationHelper {
             	mCurFilesList.add(f);
             }
         }
+        Log.d("mCurFilesList.size=" + mCurFilesList.size());
     }
 	
 	/**
@@ -133,12 +135,22 @@ public class FileOperationHelper {
 		String srcPath = fileInfo.filePath;
 		String fileName = fileInfo.fileName;
 		String desPath = FileManager.makePath(path, fileName);
-		
+		Log.d("srcPath:" + srcPath + ",desPath:" + desPath);
 		//if desFile is exist,auto rename
-		if (new File(desPath).exists()) {
-			fileName = FileInfoManager.autoRename(fileName);
-			desPath = FileManager.makePath(path, fileName);
-		}
+		
+		while (new File(desPath).exists()) {
+		    Log.d("exists");
+		    fileName = FileInfoManager.autoRename(fileName);
+		    desPath = FileManager.makePath(path, fileName);
+        }
+		
+//		if (new File(desPath).exists()) {
+//		    
+//			fileName = FileInfoManager.autoRename(fileName);
+//			desPath = FileManager.makePath(path, fileName);
+//		} else {
+//            Log.d("not exists");
+//        }
 		
 		if (fileInfo.isDir) {
 			copyFolder(srcPath, desPath);
@@ -202,6 +214,7 @@ public class FileOperationHelper {
 	 * @throws Exception
 	 */
 	private boolean copyFile(String srcPath, String desPath){
+	    Log.d("srcPath:" + srcPath + ",desPath:" + desPath);
 		if (new File(srcPath).isDirectory()) {
 			Log.d(TAG, "copyFile error:" + srcPath + " is a directory.");
 			return false;

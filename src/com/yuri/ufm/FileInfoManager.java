@@ -223,6 +223,7 @@ public class FileInfoManager {
 	 * @return newName
 	 */
 	public static String autoRename(String oldName){
+	    Log.d("oldName:" + oldName);
 		String newName = "";
 		String tempName = "";
 		String extensionName = "";

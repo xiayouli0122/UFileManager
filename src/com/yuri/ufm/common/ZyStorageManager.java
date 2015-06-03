@@ -82,7 +82,12 @@ public class ZyStorageManager {
 		//判断一下，如果挂载的路径是个空的，就不显示
 		for(String path : paths){
 			file = new File(path);
-			files = file.listFiles();
+			try {
+			    files = file.listFiles();
+            } catch (Exception e) {
+                Log.d(TAG, "" + e.toString());
+                return null;
+            }
 			if (files != null && files.length > 0) {
 				resultPaths.add(path);
 			}

@@ -77,8 +77,11 @@
             android:layout_height="fill_parent"
             android:layout_above="@+id/bottom"
             android:cacheColorHint="#00000000"
-            android:fastScrollEnabled="true"
-            android:listSelector="@drawable/list_selector" />
+            android:fastScrollEnabled="false"
+            android:scrollbars="vertical"
+            android:clipToPadding="false"
+            android:listSelector="@drawable/list_item_material"
+            />
 
         <TextView
             android:id="@+id/tv_file_listview_tip"

@@ -7,18 +7,18 @@
         android:title=""
         zhaoyan:enable="true"
         zhaoyan:iconEnable="@drawable/ic_action_createfolder_enable"
-        zhaoyan:title="@string/create_folder"/>
+        zhaoyan:amTitle="@string/create_folder"/>
     <item
         zhaoyan:id="@+id/menu_paste"
         android:title=""
         zhaoyan:enable="true"
         zhaoyan:iconEnable="@drawable/ic_action_paste_enable"
-        zhaoyan:title="@string/paste"/>
+        zhaoyan:amTitle="@string/paste"/>
     <item
         zhaoyan:id="@+id/menu_cancel"
         android:title=""
         zhaoyan:enable="true"
         zhaoyan:iconEnable="@drawable/ic_action_cancel_enable"
-        zhaoyan:title="@string/cancel"/>
+        zhaoyan:amTitle="@string/cancel"/>
 
 </menu>

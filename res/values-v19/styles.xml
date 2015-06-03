@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+
+       <!-- API 19 theme customizations can go here. -->
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+</resources>

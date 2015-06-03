@@ -17,14 +17,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -33,8 +37,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.yuri.ufm.FileInfoAdapter.OnFileCheckChangeListener;
 import com.yuri.ufm.FileInfoManager.NavigationRecord;
 import com.yuri.ufm.FileOperationHelper.OnOperationListener;
+import com.yuri.ufm.Constants.Extras;
 import com.yuri.ufm.common.CopyMoveDialog;
 import com.yuri.ufm.common.ZyDeleteDialog;
 import com.yuri.ufm.common.ZyEditDialog;
@@ -51,8 +57,9 @@ import com.zhaoyan.common.file.FileDeleteHelper.OnDeleteListener;
 import com.zhaoyan.common.file.FileUtils;
 import com.zhaoyan.common.utils.IntentBuilder;
 import com.zhaoyan.common.utils.Log;
+import com.zhaoyan.common.utils.SharedPreferencesManager;
 
-public class FileBrowserFragment extends BaseV4Fragment implements OnClickListener, OnItemClickListener, OnScrollListener,
+public class FileBrowserFragment extends BaseFragment implements OnClickListener, OnItemClickListener, OnScrollListener,
 		OnItemLongClickListener, OnOperationListener, MenuBarInterface, OnDeleteListener {
 	private static final String TAG = "FileBrowserFragment";
 
@@ -72,7 +79,7 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 	private FileInfo mSelectedFileInfo = null;
 	private int mTop = -1;
 
-	private FileHomeAdapter mHomeAdapter = null;
+//	private FileHomeAdapter mHomeAdapter = null;
 	private FileInfoManager mFileInfoManager = null;
 	
 	private FileInfoAdapter mFileInfoAdapter;
@@ -85,10 +92,10 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 	// save files
 	private List<FileInfo> mFileLists = new ArrayList<FileInfo>();
 	
-	private List<FileHomeInfo> mHomeInfoList = new ArrayList<FileHomeInfo>();
+//	private List<FileHomeInfo> mHomeInfoList = new ArrayList<FileHomeInfo>();
 	
 	//copy or cut file path list
-	private List<FileInfo> mCopyList = new ArrayList<FileInfo>();
+//	private List<FileInfo> mCopyList = new ArrayList<FileInfo>();
 	
 	//delete item positions
 	private List<Integer> mDeletePosList = new ArrayList<Integer>();
@@ -158,7 +165,7 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 				}
 				break;
 			case MSG_UPDATE_HOME:
-				mHomeAdapter.notifyDataSetChanged();
+//				mHomeAdapter.notifyDataSetChanged();
 				break;
 			case MSG_REFRESH:
 				refreshUI();
@@ -186,6 +193,7 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		mDeleteHelper.setOnDeleteListener(this);
 		
 		Log.d(TAG, "onCreate.mStatus=" + mStatus);
+
 	}
 
 	@Override
@@ -234,58 +242,122 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 
 
 		mFileInfoManager = new FileInfoManager();
-		mHomeInfoList.clear();
+
+		this.registerForContextMenu(mListView);
+//		mHomeInfoList.clear();
 		
-		FileHomeInfo homeInfo = null;
+//		FileHomeInfo homeInfo = null;
 		
 		// init
-		ZyStorageManager zsm = ZyStorageManager.getInstance(mApplicationContext);
-		String[] volumnPaths = zsm.getVolumePaths();
-		if (volumnPaths == null) {
-			Log.e(TAG, "No storage.");
-			//do nothing
-		} 
-		
-		if (volumnPaths.length != 0) {
-			String internalPath = volumnPaths[0];
-			Log.d(TAG, "internal path:" + internalPath);
-			homeInfo = new FileHomeInfo();
-			homeInfo.setStorageId(INTERNAL);
-			homeInfo.setRootPath(internalPath);
-			
-			homeInfo.setAvailableSize(ZyStorageManager.getAvailableBlockSize(internalPath));
-			homeInfo.setTotalSize(ZyStorageManager.getTotalBlockSize(internalPath));
-			
-			mHomeInfoList.add(homeInfo);
-		} 
-		
-		if (volumnPaths.length >= 2) {
-			//have internal & external
-			String externalPath = volumnPaths[1];
-			Log.d(TAG, "internal path:" + volumnPaths[0]);
-			Log.d(TAG, "external path:" + externalPath);
-			homeInfo = new FileHomeInfo();
-			homeInfo.setStorageId(SDCARD);
-			homeInfo.setRootPath(externalPath);
-			
-			homeInfo.setAvailableSize(ZyStorageManager.getAvailableBlockSize(externalPath));
-			homeInfo.setTotalSize(ZyStorageManager.getTotalBlockSize(externalPath));
-			
-			mHomeInfoList.add(homeInfo);
-		}
-
-		mHomeAdapter = new FileHomeAdapter(mApplicationContext, mHomeInfoList);
+//		ZyStorageManager zsm = ZyStorageManager.getInstance(mApplicationContext);
+//		String[] volumnPaths = zsm.getVolumePaths();
+//		if (volumnPaths == null) {
+//			Log.e(TAG, "No storage.");
+//			//do nothing
+//		} 
+//		
+//		if (volumnPaths.length != 0) {
+//			String internalPath = volumnPaths[0];
+//			Log.d(TAG, "internal path:" + internalPath);
+//			homeInfo = new FileHomeInfo();
+//			homeInfo.setStorageId(INTERNAL);
+//			homeInfo.setRootPath(internalPath);
+//			
+//			homeInfo.setAvailableSize(ZyStorageManager.getAvailableBlockSize(internalPath));
+//			homeInfo.setTotalSize(ZyStorageManager.getTotalBlockSize(internalPath));
+//			
+//			mHomeInfoList.add(homeInfo);
+//		} 
+//		
+//		if (volumnPaths.length >= 2) {
+//			//have internal & external
+//			String externalPath = volumnPaths[1];
+//			Log.d(TAG, "internal path:" + volumnPaths[0]);
+//			Log.d(TAG, "external path:" + externalPath);
+//			homeInfo = new FileHomeInfo();
+//			homeInfo.setStorageId(SDCARD);
+//			homeInfo.setRootPath(externalPath);
+//			
+//			homeInfo.setAvailableSize(ZyStorageManager.getAvailableBlockSize(externalPath));
+//			homeInfo.setTotalSize(ZyStorageManager.getTotalBlockSize(externalPath));
+//			
+//			mHomeInfoList.add(homeInfo);
+//		}
+//
+//		mHomeAdapter = new FileHomeAdapter(mApplicationContext, mHomeInfoList);
 		mIconHelper = new FileIconHelper(mApplicationContext);
 //		mFileInfoAdapter = new FileInfoAdapter(mApplicationContext, mAllLists, mIconHelper);
 		mFileInfoAdapter = new FileInfoAdapter(mApplicationContext, mIconHelper);
+		mFileInfoAdapter.setOnFileCheckChangeListener(new OnFileCheckChangeListener() {
+            @Override
+            public void onCheckChange() {
+                Log.d();
+                if (mFileInfoAdapter.isMode(ActionMenu.MODE_EDIT)) {
+                    updateMenuBar();
+                    mMenuBarManager.refreshMenus(mActionMenu);  
+                } else {
+                    mFileInfoAdapter.changeMode(ActionMenu.MODE_EDIT);
+                
+//                    mActionMenu = new ActionMenu(mApplicationContext);
+                    if (mActionMenu == null) {
+                        mActionMenu = new ActionMenu(mApplicationContext);
+                    }
+                    getActionMenuInflater().inflate(R.menu.allfile_menu, mActionMenu);
+                    Log.d("startMenuBar");
+                    startMenuBar(mMenuBarView);
+                }
+            }
 
-		if (mHomeInfoList.size() <= 0) {
-			mNavBarLayout.setVisibility(View.GONE);
-			mListViewTip.setVisibility(View.VISIBLE);
-			mListViewTip.setText(R.string.no_sdcard);
-		} else {
-			goToHome();
-		}
+            @Override
+            public void onCheckBoxClicked(int position) {
+                // TODO Auto-generated method stub
+                Log.d();
+                if (mFileInfoAdapter.isMode(ActionMenu.MODE_EDIT)) {
+                    mFileInfoAdapter.setSelected(position);
+                    
+                    updateMenuBar();
+                    mMenuBarManager.refreshMenus(mActionMenu);  
+                } else if (mFileInfoAdapter.isMode(ActionMenu.MODE_COPY) ||
+                        mFileInfoAdapter.isMode(ActionMenu.MODE_CUT)) {
+                    mFileInfoAdapter.setSelected(position);
+                    
+                    mFileOperationHelper.copy(mFileInfoAdapter.getSelectedFileInfos());
+                }else {
+                    mFileInfoAdapter.changeMode(ActionMenu.MODE_EDIT);
+                
+//                    mActionMenu = new ActionMenu(mApplicationContext);
+                    boolean isSelected = mFileInfoAdapter.isSelected(position);
+                    mFileInfoAdapter.setSelected(position, !isSelected);
+//                    mFileInfoAdapter.notifyDataSetChanged();
+                    
+                    if (mActionMenu == null) {
+                        mActionMenu = new ActionMenu(mApplicationContext);
+                    }
+                    getActionMenuInflater().inflate(R.menu.allfile_menu, mActionMenu);
+                    Log.d("startMenuBar");
+                    startMenuBar(mMenuBarView);
+                }
+            }
+        });
+		Log.d();
+		Log.d("onCreatEnd");
+		
+		setAdapter(mAllLists);
+////      browserTo(new File(mRootPath));
+//
+		if (mRootPath == null) {
+            mRootPath = SharedPreferencesManager.get(mApplicationContext, Extras.KEY_DEFAULT_ROOT_PATH, Constants.DEFAULT_SDCARD);
+        }
+		
+        doScanFiles(mRootPath);
+
+//		if (mHomeInfoList.size() <= 0) {
+//			mNavBarLayout.setVisibility(View.GONE);
+//			mListViewTip.setVisibility(View.VISIBLE);
+//			mListViewTip.setText(R.string.no_sdcard);
+//		} else {
+//			goToHome();
+//		}
 	}
 
 	@Override
@@ -293,7 +365,7 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		switch (v.getId()) {
 		case R.id.ll_home:
 			destroyMenuBar();
-			goToHome();
+//			goToHome();
 			break;
 		default:
 			mIconHelper.stopLoader();
@@ -314,24 +386,37 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		}
 	}
 
+	public void goToMain(int storge_type, String rootPath){
+	    Log.d();
+		this.storge_type = storge_type;
+		mRootPath = rootPath;
+
+		mStatus = STATUS_FILE;
+
+//		setAdapter(mAllLists);
+//			browserTo(new File(mRootPath));
+
+//		doScanFiles(mRootPath);
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		if (STATUS_HOME == mStatus) {
-			storge_type = mHomeInfoList.get(position).getStorageId();
-			mNavBarLayout.setVisibility(View.VISIBLE);
-			mStatus = STATUS_FILE;
-			mRootPath = mHomeInfoList.get(position).getRootPath();
-			
-			setAdapter(mAllLists);
-//			browserTo(new File(mRootPath));
-			
-			doScanFiles(mRootPath);
-		} else {
+//		if (STATUS_HOME == mStatus) {
+//			storge_type = mHomeInfoList.get(position).getStorageId();
+//			mNavBarLayout.setVisibility(View.VISIBLE);
+//			mStatus = STATUS_FILE;
+//			mRootPath = mHomeInfoList.get(position).getRootPath();
+//			
+//			setAdapter(mAllLists);
+////			browserTo(new File(mRootPath));
+//			
+//			doScanFiles(mRootPath);
+//		} else {
 			if (mFileInfoAdapter.isMode(ActionMenu.MODE_EDIT)) {
 				mFileInfoAdapter.setSelected(position);
 				mFileInfoAdapter.notifyDataSetChanged();
 
-				int selectedCount = mFileInfoAdapter.getSelectedItems();
+//				int selectedCount = mFileInfoAdapter.getSelectedItems();
 //				updateTitleNum(selectedCount);
 				updateMenuBar();
 				mMenuBarManager.refreshMenus(mActionMenu);
@@ -347,7 +432,7 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 					IntentBuilder.viewFile(getActivity(), selectedFileInfo.filePath);
 				}
 			}
-		}
+//		}
 	}
 	
 	private void doScanFiles(File file){
@@ -359,6 +444,7 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 	}
 	
 	private void doScanFiles(String path){
+	    Log.d(path);
 		File file = new File(path);
 		doScanFiles(file);
 	}
@@ -371,6 +457,8 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, final View view, final int position, long arg3) {
+	    mTop = view.getTop();
+	    
 		if (STATUS_HOME == mStatus) {
 			return false;
 		}
@@ -382,20 +470,98 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		} else if (mFileInfoAdapter.isMode(ActionMenu.MODE_COPY)
 				|| mFileInfoAdapter.isMode(ActionMenu.MODE_CUT)) {
 			return true;
-		} else {
-			mFileInfoAdapter.changeMode(ActionMenu.MODE_EDIT);
-//			updateTitleNum(1);
 		}
-		
-		boolean isSelected = mFileInfoAdapter.isSelected(position);
-		mFileInfoAdapter.setSelected(position, !isSelected);
-		mFileInfoAdapter.notifyDataSetChanged();
 
-		mActionMenu = new ActionMenu(mApplicationContext);
-		getActionMenuInflater().inflate(R.menu.allfile_menu, mActionMenu);
-		
-		startMenuBar(mMenuBarView);
-		return true;
+//		else {
+//			mFileInfoAdapter.changeMode(ActionMenu.MODE_EDIT);
+////			updateTitleNum(1);
+//		}
+//
+//		boolean isSelected = mFileInfoAdapter.isSelected(position);
+//		mFileInfoAdapter.setSelected(position, !isSelected);
+//		mFileInfoAdapter.notifyDataSetChanged();
+//
+//		if (mActionMenu == null) {
+//		    mActionMenu = new ActionMenu(mApplicationContext);
+//        }
+//		getActionMenuInflater().inflate(R.menu.allfile_menu, mActionMenu);
+//
+//		startMenuBar(mMenuBarView);
+		//如果有注册ContextMenu, 如果你想在onItemLongClick中实现弹出ContextMenu，那么就return false，否则return true.
+		return false;
+	}
+	
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		AdapterContextMenuInfo adapterContextMenuInfo = (AdapterContextMenuInfo) menuInfo;
+		//获取弹出菜单时，用户选择的ListView的位置
+		int position = adapterContextMenuInfo.position;
+		FileInfo fileInfo = mFileInfoAdapter.getItem(position);
+		if (fileInfo.isDir) {
+		    getActivity().getMenuInflater().inflate(R.menu.menu_folder, menu);
+        } else {
+            getActivity().getMenuInflater().inflate(R.menu.menu_file, menu);
+        }
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	    AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+	    int position = menuInfo.position;
+	    Log.d("position:" + position);
+	    FileInfo fileInfo = mFileInfoAdapter.getItem(position);
+	    List<FileInfo> fileInfos = new ArrayList<FileInfo>();
+	    fileInfos.add(fileInfo);
+	    switch (item.getItemId()) {
+        case R.id.menu_open:
+            if (fileInfo.isDir) {
+                addToNavigationList(mCurrentPath, mTop, fileInfo);
+                doScanFiles(fileInfo.filePath);
+            } else {
+                // open file
+                IntentBuilder.viewFile(getActivity(), fileInfo.filePath);
+            }
+            break;
+        case R.id.menu_copy:
+            mFileOperationHelper.copy(fileInfos);
+            mFileInfoAdapter.setSelected(position);
+            mFileInfoAdapter.changeMode(ActionMenu.MODE_COPY);
+            mFileInfoAdapter.notifyDataSetChanged();
+            startSinglePasteMenu(fileInfos);
+            break;
+        case R.id.menu_cut:
+            mFileOperationHelper.copy(fileInfos);
+            
+            mFileInfoAdapter.setSelected(position);
+            mFileInfoAdapter.changeMode(ActionMenu.MODE_CUT);
+            mFileInfoAdapter.notifyDataSetChanged();
+            startSinglePasteMenu(fileInfos);
+            break;
+        case R.id.menu_delete:
+            showDeleteSingleDialog(fileInfo);
+            break;
+        case R.id.menu_rename:
+            mFileInfoManager.showRenameDialog(getActivity(), fileInfos);
+            break;
+        case R.id.menu_info:
+            mFileInfoManager.showInfoDialog(getActivity(), fileInfos);
+            break;
+        case R.id.menu_share:
+            File file = new File(fileInfo.filePath);
+            
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            startActivity(intent);
+            break;
+
+        default:
+            break;
+        }
+	    return super.onContextItemSelected(item);
 	}
 
 	public void browserTo(File file) {
@@ -541,6 +707,33 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		deleteDialog.setNegativeButton(R.string.cancel, null);
 		deleteDialog.show();
 	}
+	
+	/**
+     * show delete single confrim dialog
+     */
+    public void showDeleteSingleDialog(final FileInfo fileInfo) {
+        ZyDeleteDialog deleteDialog = new ZyDeleteDialog(getActivity());
+        deleteDialog.setDialogTitle(R.string.delete_file);
+        String msg = getString(R.string.delete_file_confirm_msg, fileInfo.fileName);
+        deleteDialog.setMessage(msg);
+        deleteDialog.setPositiveButton(R.string.menu_delete, new onZyDialogClickListener() {
+            @Override
+            public void onClick(Dialog dialog) {
+                List<String> deleteList = new ArrayList<String>();
+                deleteList.add(fileInfo.filePath);
+                
+                mDeleteHelper.setDeletePathList(deleteList);
+                mDeleteHelper.doDelete();
+                
+                mFileInfoAdapter.remove(fileInfo);
+                mFileInfoAdapter.notifyDataSetChanged();
+                
+                dialog.dismiss();
+            }
+        });
+        deleteDialog.setNegativeButton(R.string.cancel, null);
+        deleteDialog.show();
+    }
 
 	public void addToNavigationList(String currentPath, int top, FileInfo selectFile) {
 		mFileInfoManager.addToNavigationList(new NavigationRecord(currentPath, top, selectFile));
@@ -771,16 +964,16 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		message.sendToTarget();
 	}
 
-	public void goToHome() {
-		Log.d(TAG, "goToHome");
-		mAllLists.clear();
-		mNavBarLayout.setVisibility(View.GONE);
-
-		mStatus = STATUS_HOME;
-		updateUI(mHomeInfoList.size());
-		mListView.setAdapter(mHomeAdapter);
-		mHomeAdapter.notifyDataSetChanged();
-	}
+//	public void goToHome() {
+//		Log.d(TAG, "goToHome");
+//		mAllLists.clear();
+//		mNavBarLayout.setVisibility(View.GONE);
+//
+//		mStatus = STATUS_HOME;
+//		updateUI(mHomeInfoList.size());
+//		mListView.setAdapter(mHomeAdapter);
+//		mHomeAdapter.notifyDataSetChanged();
+//	}
 
 	/**
 	 * back key callback
@@ -789,18 +982,21 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 	public boolean onBackPressed() {
 		Log.d(TAG, "onBackPressed.mStatus=" + mStatus);
 		mIconHelper.stopLoader();
-		if (mFileInfoAdapter.isMode(ActionMenu.MODE_EDIT)) {
+		if (mFileInfoAdapter.isMode(ActionMenu.MODE_EDIT) ||
+		        mFileInfoAdapter.isMode(ActionMenu.MODE_COPY) ||
+		        mFileInfoAdapter.isMode(ActionMenu.MODE_CUT)) {
 			destroyMenuBar();
-			return false;
+			return true;
 		}
 
 		switch (mStatus) {
 		case STATUS_HOME:
-			return true;
+			return super.onBackPressed();
 		case STATUS_FILE:
 			// if is root path,back to Home view
 			if (isRootPath()) {
-				goToHome();
+//				goToHome();
+			    return super.onBackPressed();
 			} else {
 				NavigationRecord navRecord = mFileInfoManager.getPrevNavigation();
 				String prevPath = null;
@@ -814,12 +1010,11 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 					}
 				}
 			}
-			break;
+			return true;
 		default:
-			goToHome();
-			break;
+//			goToHome();
+			return true;
 		}
-		return false;
 	}
 
 	@Override
@@ -832,6 +1027,10 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		switch (item.getItemId()) {
 		case R.id.menu_delete:
 			List<Integer> posList = mFileInfoAdapter.getSelectedItemsPos();
+			Log.d("delete.size=" + posList.size());
+			for (int i = 0; i < posList.size(); i++) {
+                Log.d("delete[" + i + "=" + posList.get(i));
+            }
 			showDeleteDialog(posList);
 			break;
 		case R.id.menu_select:
@@ -968,8 +1167,8 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		
 		mFileInfoAdapter.changeMode(ActionMenu.MODE_NORMAL);
 		mFileInfoAdapter.clearSelected();
-		mFileInfoAdapter.notifyDataSetChanged();
-		mCopyList.clear();
+		
+//		mCopyList.clear();
 	}
 
 	@Override
@@ -1012,17 +1211,29 @@ public class FileBrowserFragment extends BaseV4Fragment implements OnClickListen
 		} else {
 			mFileInfoAdapter.selectAll(false);
 		}
-		updateMenuBar();
-		mMenuBarManager.refreshMenus(mActionMenu);
+//		updateMenuBar();
+//		mMenuBarManager.refreshMenus(mActionMenu);
 		mFileInfoAdapter.notifyDataSetChanged();
 	}
 	
 	public void startPasteMenu(){
-		mCopyList = mFileInfoAdapter.getSelectedFileInfos();
+//		mCopyList = mFileInfoAdapter.getSelectedFileInfos();
 		//update new menu
-		mActionMenu = new ActionMenu(mApplicationContext);
+//		mActionMenu = new ActionMenu(mApplicationContext);
+		if (mActionMenu == null) {
+            mActionMenu = new ActionMenu(mApplicationContext);
+        }
 		getActionMenuInflater().inflate(R.menu.allfile_menu_paste, mActionMenu);
 		mMenuBarManager.refreshMenus(mActionMenu);
+	}
+	
+	public void startSinglePasteMenu(List<FileInfo> list){
+//	    mCopyList = list;
+	    if (mActionMenu == null) {
+            mActionMenu = new ActionMenu(mApplicationContext);
+        }
+	    getActionMenuInflater().inflate(R.menu.allfile_menu_paste, mActionMenu);
+	    startMenuBar(mMenuBarView);
 	}
 	
 	private void onOperationPaste(){

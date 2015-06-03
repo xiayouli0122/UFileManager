@@ -13,6 +13,9 @@
     <color name="translucent_background">#80000000</color>
     <color name="table_title_selected">#5d91be</color>
     <color name="table_title_unselected">#696969</color>
+
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimary">#2196F3</color>
     
     <!-- traffic statistics color -->
     <color name="traffic_send">#5eb95e</color>
@@ -46,6 +49,9 @@
     <drawable name="listselector_normal">@android:color/transparent</drawable>
     <drawable name="whilte">@color/white</drawable>
     <drawable name="gray">#eed1d1d1</drawable>
+
+    <color name="ripple_color">#40000000</color>
+    <color name="ripple_color_mark">#ff0000</color>
     
     <color name="header_normal">#ffe74c3c</color>
     <color name="header_pressed">#ffc0392b</color>

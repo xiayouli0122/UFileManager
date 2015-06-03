@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="AppTheme" parent="AppBaseTheme" >
+        <!-- 设定最底下导航栏的背景颜色 -->
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:colorControlHighlight">@color/colorPrimaryDark</item>
+    </style>
+
+</resources>
