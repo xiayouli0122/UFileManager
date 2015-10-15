@@ -26,7 +26,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/file_home"
                 android:paddingLeft="10dp"
-                android:paddingRight="5dp" >
+                android:paddingRight="5dp"
+                android:visibility="gone"
+                 >
 
                 <ImageView
                     android:id="@+id/iv_home"
@@ -40,7 +42,9 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="fill_parent"
-                android:background="#7f767676" />
+                android:background="#7f767676"
+                android:visibility="gone"
+                 />
 
             <com.yuri.ufm.views.SlowHorizontalScrollView
                 android:id="@+id/navigation_bar_view"
@@ -96,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:indeterminateDrawable="@drawable/loading_progressbar"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:visibility="invisible" />
 
         <RelativeLayout

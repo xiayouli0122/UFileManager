@@ -124,4 +124,6 @@ public class Constants {
 	public static final class Extras{
 	    public static final String KEY_DEFAULT_ROOT_PATH = "key_default_root_path";
 	}
+	
+	public static final int CLASS_APP = 2;
 }

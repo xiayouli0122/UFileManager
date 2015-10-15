@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class FileHomeAdapter extends BaseAdapter {
-	private static final String TAG = "FileHomeAdapter";
 	private List<FileHomeInfo> homeList = new ArrayList<FileHomeInfo>();
 	private LayoutInflater mInflater = null;
 	private Context mContext;
@@ -65,6 +64,11 @@ public class FileHomeAdapter extends BaseAdapter {
 			imageView.setImageResource(R.drawable.storage_sd_card_n);
 			titleView.setText(R.string.sdcard);
 			break;
+		case Constants.CLASS_APP:
+		    titleView.setText("App");
+		    availableView.setVisibility(View.GONE);
+		    totalView.setVisibility(View.GONE);
+		    break;
 		}
 		availableView.setText(mContext.getString(R.string.storage_available, Utils.getFormatSize(homeList.get(position).getAvailableSize())));
 		totalView.setText(mContext.getString(R.string.storage_total, Utils.getFormatSize(homeList.get(position).getTotalSize())));

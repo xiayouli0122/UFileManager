@@ -184,6 +184,7 @@ public class FileBrowserFragment extends BaseFragment implements OnClickListener
 		};
 	};
 
+	private boolean mShowHide = true;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mFileOperationHelper = new FileOperationHelper(getActivity().getApplicationContext());
@@ -194,6 +195,7 @@ public class FileBrowserFragment extends BaseFragment implements OnClickListener
 		
 		Log.d(TAG, "onCreate.mStatus=" + mStatus);
 
+		mShowHide = SharedPreferencesManager.get(getActivity(), FileBrowserActivity.KEY_SHOW_HIDE, true);
 	}
 
 	@Override
@@ -364,7 +366,7 @@ public class FileBrowserFragment extends BaseFragment implements OnClickListener
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ll_home:
-			destroyMenuBar();
+//			destroyMenuBar();
 //			goToHome();
 			break;
 		default:
@@ -490,8 +492,17 @@ public class FileBrowserFragment extends BaseFragment implements OnClickListener
 		//如果有注册ContextMenu, 如果你想在onItemLongClick中实现弹出ContextMenu，那么就return false，否则return true.
 		return false;
 	}
-	
 
+	@Override
+	public void showHideFile(boolean showHide) {
+	    // TODO Auto-generated method stub
+	    super.showHideFile(showHide);
+	    Log.d("showHide:" + showHide);
+	    mShowHide = showHide;
+	    SharedPreferencesManager.put(mApplicationContext, FileBrowserActivity.KEY_SHOW_HIDE, showHide);
+	    refreshUI();
+	}
+	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -651,14 +662,14 @@ public class FileBrowserFragment extends BaseFragment implements OnClickListener
 				}else {
 					int count = files.length;
 					for(File f : files){
-						if (f.isHidden()) {
+						if (!mShowHide && f.isHidden()) {
 							count --;
 						}
 					}
 					fileInfo.count = count;
 				}
 				
-				if (currentFile.isHidden()) {
+				if (!mShowHide && currentFile.isHidden()) {
 					// do nothing
 				} else {
 					mFolderLists.add(fileInfo);
@@ -667,7 +678,7 @@ public class FileBrowserFragment extends BaseFragment implements OnClickListener
 				fileInfo.isDir = false;
 				fileInfo.fileSize = currentFile.length();
 				fileInfo.type = FileManager.getFileType(mApplicationContext, currentFile);
-				if (currentFile.isHidden()) {
+				if (!mShowHide && currentFile.isHidden()) {
 					// do nothing
 				} else {
 					mFileLists.add(fileInfo);
@@ -767,21 +778,23 @@ public class FileBrowserFragment extends BaseFragment implements OnClickListener
 				return;
 			}
 			Log.d(TAG, "updateHomeButton.type:" + type + ",button:" + homeBtn);
-			Resources resources = getResources();
-			homeBtn.setBackgroundResource(R.drawable.custom_home_ninepatch_tab);
-			homeBtn.setPadding((int) resources.getDimension(R.dimen.home_btn_padding), 0,
-					(int) resources.getDimension(R.dimen.home_btn_padding), 0);
-			homeBtn.setTextColor(Color.BLACK);
-			switch (type) {
-			case INTERNAL:
-				homeBtn.setText(R.string.internal_sdcard);
-				break;
-			case SDCARD:
-				homeBtn.setText(R.string.sdcard);
-				break;
-			default:
-				break;
-			}
+			if (isAdded()) {
+			    Resources resources = getResources();
+	            homeBtn.setBackgroundResource(R.drawable.custom_home_ninepatch_tab);
+	            homeBtn.setPadding((int) resources.getDimension(R.dimen.home_btn_padding), 0,
+	                    (int) resources.getDimension(R.dimen.home_btn_padding), 0);
+	            homeBtn.setTextColor(Color.BLACK);
+	            switch (type) {
+	            case INTERNAL:
+	                homeBtn.setText(R.string.internal_sdcard);
+	                break;
+	            case SDCARD:
+	                homeBtn.setText(R.string.sdcard);
+	                break;
+	            default:
+	                break;
+	            }
+            }
 		}
 
 		public void refreshTab(String initFileInfo, int type) {

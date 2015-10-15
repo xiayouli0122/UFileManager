@@ -79,6 +79,10 @@ public class BaseFragment extends LibBaseFragment{
 //		getActivity().overridePendingTransition(R.anim.activity_right_in, 0);
 	}
 	
+	public void showHideFile(boolean hide){
+        
+    }
+
 	/**
 	 * when user pressed back key
 	 */
